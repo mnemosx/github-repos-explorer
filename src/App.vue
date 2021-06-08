@@ -14,8 +14,6 @@ export default {
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-@import "styles/_variables";
-@import "styles/_mixins";
 
 * {
   padding: 0;
@@ -36,5 +34,13 @@ body {
   width: 90%;
   max-width: 990px;
   margin: 0 auto;
+}
+
+input {
+  &:-webkit-autofill {
+    border: none;
+    -webkit-text-fill-color: $color-main;
+    -webkit-box-shadow: none;
+  }
 }
 </style>
