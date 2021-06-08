@@ -1,7 +1,8 @@
 <template>
-  <div class="container">dis a home</div>
-  <Search />
-  <Results />
+  <div class="container">
+    <Search />
+    <Results />
+  </div>
 </template>
 
 <script>
