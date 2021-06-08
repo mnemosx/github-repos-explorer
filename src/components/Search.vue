@@ -20,30 +20,33 @@
 </template>
 
 <script>
+import { ref, toRefs, reactive, watch, computed } from "vue";
 export default {
   name: "Search",
-  data() {
-    return {
+  setup() {
+    const input = reactive({
       debouncedSearchInput: "",
-      timeout: null,
-      results: [],
-    };
-  },
-  computed: {
-    searchInput: {
-      get() {
-        return this.debouncedSearchInput;
-      },
-      set(val) {
-        if (this.timeout) clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-          this.debouncedSearchInput = val;
-        }, 1000);
-      },
-    },
-  },
-  methods: {
-    search(val) {
+      searchInput: computed({
+        get() {
+          return input.debouncedSearchInput;
+        },
+        set(val) {
+          if (timeout.value) clearTimeout(timeout.value);
+          timeout.value = setTimeout(() => {
+            input.debouncedSearchInput = val;
+          }, 1000);
+        },
+      }),
+    });
+
+    watch(input, (newValue) => {
+      if (newValue !== "") search(newValue);
+    });
+
+    const timeout = ref(null);
+    const results = ref([]);
+
+    function search(val) {
       if (val === "") return;
       /*
       // some API call goes here
@@ -55,16 +58,18 @@ export default {
         })
         .catch((error) => console.error(error)); 
       */
-    },
-    clearInput() {
-      this.debouncedSearchInput = "";
-      clearTimeout(this.timeout);
-    },
-  },
-  watch: {
-    debouncedSearchInput(newValue) {
-      if (newValue !== "") this.search(newValue);
-    },
+    }
+    function clearInput() {
+      input.debouncedSearchInput = "";
+      clearTimeout(timeout.value);
+    }
+
+    return {
+      ...toRefs(input),
+      input,
+      results,
+      clearInput,
+    };
   },
 };
 </script>
