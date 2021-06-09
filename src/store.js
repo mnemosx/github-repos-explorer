@@ -32,11 +32,14 @@ const actions = {
       })
       .then((response) => {
         commit("FETCH_USERS", response.data.search.edges);
-        commit("setIsLoading", false)
-        router.replace({ path: "search", query: { q: payload.variables.searchQuery } });
+
       })
       .catch((error) => {
         console.error(error.statusText);
+      })
+      .finally(() => {
+        commit("setIsLoading", false)
+        router.replace({ path: "search", query: { q: payload.variables.searchQuery } });
       });
   }
 }
