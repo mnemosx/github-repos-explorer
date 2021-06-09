@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import { UsersWithRepos } from "@/utils/queries";
+import router from "./router";
 
 const state = {
   users: [],
@@ -32,6 +33,7 @@ const actions = {
       .then((response) => {
         commit("FETCH_USERS", response.data.search.edges);
         commit("setIsLoading", false)
+        router.replace({ path: "search", query: { q: payload.variables.searchQuery } });
       })
       .catch((error) => {
         console.error(error.statusText);
