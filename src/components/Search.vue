@@ -28,6 +28,7 @@ export default {
   name: "Search",
   setup() {
     const store = useStore();
+    const route = useRoute();
 
     /**
      * Search INPUT updating & clearing.
@@ -43,11 +44,6 @@ export default {
         },
         set(val) {
           if (timeout.value) clearTimeout(timeout.value);
-          if (route.query.q && !store.state.searchInput) {
-            store.commit("setSearchInput", route.query.q);
-            store.dispatch("fetchUsers");
-            return;
-          }
           timeout.value = setTimeout(() => {
             store.commit("setSearchInput", val);
           }, 1000);
@@ -64,7 +60,6 @@ export default {
      * Fill in search input value with value from query in url.
      * Automatically makes a call to API using that query.
      */
-    const route = useRoute();
     watch(
       () => route.query,
       () => {

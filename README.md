@@ -16,13 +16,13 @@
 :heavy_multiplication_x: Start screen displays past searches which are persistent between app launches  
 :heavy_multiplication_x: Mobile friendly  
 :heavy_multiplication_x: Tested using Cypress  
+:heavy_multiplication_x: User can like repos  
 
 
 ### Additionaly
 :heavy_multiplication_x: Skip users with 0 repos  
-:heavy_multiplication_x: User can like repos  
 :heavy_multiplication_x: Liked repos are gathered together in a separate page  
-:heavy_multiplication_x: Repos are sorted by most starred  
+:heavy_check_mark: Repos are sorted by most starred  
 :heavy_multiplication_x: If number of repos > 15 (or so), show the rest in compact list in expansion component  
    -- Alternatively, request more repos when user has scrolled all the way right  
    -- Alternatively, just display only the first 15 (or so) most starred repos for each user  

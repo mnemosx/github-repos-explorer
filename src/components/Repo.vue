@@ -114,7 +114,6 @@ export default {
         border: 1px solid rgba($color-border-light, 0.5);
         padding: 10px 20px;
         display: inline-block;
-        width: 55px;
         &:first-child {
           border-right: none;
         }
