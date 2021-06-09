@@ -28,15 +28,15 @@
         </div>
       </div>
     </div>
-    <!-- <div v-if="noResultsReturned" class="error-wrapper">
+    <div v-if="emptyResults" class="error-wrapper">
       <font-awesome-icon icon="heart-broken" size="10x" flip="horizontal" />
       No results :(
-    </div> -->
+    </div>
   </div>
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 import VueHorizontal from "vue-horizontal";
 import Repo from "@/components/Repo.vue";
@@ -46,22 +46,23 @@ export default {
   components: { VueHorizontal, Repo },
   setup() {
     const store = useStore();
-    // const liked = ref(false);
     const results = computed(() => store.state.users);
+    const emptyResults = computed(() => store.state.emptyResults);
     return {
       results,
-      // liked,
+      emptyResults,
     };
   },
 };
 </script>
 
 <style scoped lang="scss">
-// .error-wrapper {
-//   margin-top: 20vh;
-//   @include center-flex;
-//   font-size: 1.5em;
-// }
+.error-wrapper {
+  margin-top: 20vh;
+  @include center-flex-vh;
+  @include col;
+  font-size: 1.5em;
+}
 
 .user-card-wrapper {
   @include col;
