@@ -16,14 +16,30 @@
         @click="clearInput"
       />
     </div>
+    <div v-if="isFetching">Loading...</div>
+    <div v-if="error">Sorry, something went wrong.</div>
+    <div v-else>
+      {{ Results }}
+    </div>
   </div>
 </template>
 
 <script>
-import { ref, toRefs, reactive, watch, computed } from "vue";
+import { useClient, useQuery, defaultPlugins } from "villus";
+import { ref, toRefs, reactive, computed } from "vue";
+import { UsersWithRepos } from "@/utils/queries";
+
 export default {
   name: "Search",
   setup() {
+    function authPlugin({ opContext }) {
+      opContext.headers.Authorization = `Bearer ${process.env.VUE_APP_GITHUB_GRAPHQL_AUTH_TOKEN}`;
+    }
+    useClient({
+      url: "https://api.github.com/graphql",
+      use: [authPlugin, ...defaultPlugins()],
+    });
+
     const input = reactive({
       debouncedSearchInput: "",
       searchInput: computed({
@@ -39,26 +55,28 @@ export default {
       }),
     });
 
-    watch(input, (newValue) => {
-      if (newValue !== "") search(newValue);
+    const timeout = ref(null);
+
+    const number_of_users = 10;
+    const number_of_repos = 10;
+
+    const variables = computed(() => {
+      return {
+        searchQuery: input.debouncedSearchInput,
+        number_of_users,
+        number_of_repos,
+      };
+    });
+    const {
+      data: Results,
+      error,
+      isFetching,
+    } = useQuery({
+      query: UsersWithRepos,
+      fetchOnMount: false,
+      variables,
     });
 
-    const timeout = ref(null);
-    const results = ref([]);
-
-    function search(val) {
-      if (val === "") return;
-      /*
-      // some API call goes here
-        .then((response) => {
-          if (response) {
-            // populate results with data
-            return;
-          }
-        })
-        .catch((error) => console.error(error)); 
-      */
-    }
     function clearInput() {
       input.debouncedSearchInput = "";
       clearTimeout(timeout.value);
@@ -67,8 +85,10 @@ export default {
     return {
       ...toRefs(input),
       input,
-      results,
       clearInput,
+      Results,
+      error,
+      isFetching,
     };
   },
 };
