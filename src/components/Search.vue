@@ -22,14 +22,14 @@
 <script>
 import { createClient, defaultPlugins } from "villus";
 import { ref, toRefs, reactive, computed, watch } from "vue";
-import { UsersWithRepos } from "@/utils/queries";
+import { useStore } from "vuex";
 
 export default {
   name: "Search",
   setup() {
-    const number_of_users = 10;
-    const number_of_repos = 10;
-
+    /**
+     * Search INPUT debouncing and clearing.
+     */
     const timeout = ref(null);
 
     const input = reactive({
@@ -52,6 +52,14 @@ export default {
       clearTimeout(timeout.value);
     }
 
+    /**
+     * Make a REQUEST to graphQl API (or local cache) each time search input updates.
+     * @param {number} number_of_users The number of users returned per page.
+     * @param {number} number_of_repos The number of repos returned for each user.
+     * TODO: Pagination for both users and repos
+     * TODO: Cache received data
+     */
+
     function authPlugin({ opContext }) {
       opContext.headers.Authorization = `Bearer ${process.env.VUE_APP_GITHUB_GRAPHQL_AUTH_TOKEN}`;
     }
@@ -60,22 +68,22 @@ export default {
       use: [authPlugin, ...defaultPlugins()],
     });
 
+    const store = useStore();
+
+    const number_of_users = 10;
+    const number_of_repos = 10;
+    let variables = {
+      number_of_users,
+      number_of_repos,
+    };
+
     watch(
       () => input.debouncedSearchInput,
       (val) => {
-        client // TODO: move query execution to vuex action
-          .executeQuery({
-            query: UsersWithRepos,
-            variables: {
-              searchQuery: val,
-              number_of_users,
-              number_of_repos,
-            },
-          })
-          .then((response) => {
-            console.log(response.data.search.edges);
-            // then get the response data to vuex store
-          }); // TODO: handle errors and isFetching state manually
+        if (val !== "") {
+          variables = { ...variables, searchQuery: val };
+          store.dispatch("fetchUsers", { client, variables });
+        }
       }
     );
 
