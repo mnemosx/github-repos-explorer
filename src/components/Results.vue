@@ -1,33 +1,38 @@
 <template>
   <div class="container">
-    <div class="user-card-wrapper">
-      <div v-for="item in results" :key="item.node.login" class="user-card">
-        <div class="card-title">
-          <h2>{{ item.node.name || item.node.login }}</h2>
-        </div>
-        <div class="inner-card">
-          <img
-            :src="item.node.avatarUrl"
-            :alt="item.node.name || item.node.login"
-            class="user-avatar"
-          />
-          <template v-if="item.node.repositories?.edges.length">
-            <vue-horizontal class="horizontal">
-              <template
-                v-for="(repo, idx) in item.node.repositories.edges"
-                :key="idx"
-              >
-                <Repo :repo="repo.node" />
-              </template>
-            </vue-horizontal>
-          </template>
-          <div v-else class="no-repos">
-            <p>This user has no repositories</p>
-            <font-awesome-icon icon="heart-broken" size="lg" />
-          </div>
+    <div v-for="item in results" :key="item.node.login" class="user-card">
+      <div class="card-title">
+        <h2>{{ item.node.name || item.node.login || "" }}</h2>
+      </div>
+      <div class="inner-card">
+        <img
+          :src="item.node.avatarUrl"
+          :alt="item.node.name || item.node.login"
+          class="user-avatar"
+        />
+        <template v-if="item.node.repositories?.edges.length">
+          <vue-horizontal class="horizontal">
+            <template
+              v-for="(repo, idx) in item.node.repositories.edges"
+              :key="idx"
+            >
+              <Repo :repo="repo.node" />
+            </template>
+          </vue-horizontal>
+        </template>
+        <div v-else class="no-repos">
+          <p>This user has no repositories</p>
+          <font-awesome-icon icon="heart-broken" size="lg" />
         </div>
       </div>
     </div>
+    <Button
+      v-if="store.state.pagination.hasNextPage"
+      @clicked="loadMore"
+      text="Load more"
+      :hasArrow="false"
+      class="more-btn"
+    />
   </div>
 </template>
 
@@ -36,23 +41,32 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 import VueHorizontal from "vue-horizontal";
 import Repo from "@/components/Repo.vue";
+import Button from "@/components/Button.vue";
 
 export default {
   name: "Results",
-  components: { VueHorizontal, Repo },
+  components: { VueHorizontal, Repo, Button },
   setup() {
     const store = useStore();
     const results = computed(() => store.state.users);
+
+    const loadMore = () => {
+      store.dispatch("fetchUsers", { append: true });
+    };
+
     return {
       results,
+      loadMore,
+      store,
     };
   },
 };
 </script>
 
 <style scoped lang="scss">
-.user-card-wrapper {
+.container {
   @include col;
+  position: relative;
 
   .user-card {
     @include col;
@@ -96,6 +110,12 @@ export default {
         width: calc(100% - 170px);
       }
     }
+  }
+
+  .more-btn {
+    margin: 0 auto;
+    width: 90%;
+    max-width: 300px;
   }
 }
 </style>

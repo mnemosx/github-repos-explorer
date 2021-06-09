@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import { createClient, defaultPlugins } from "villus";
 import { ref, toRefs, reactive, computed, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
@@ -28,56 +27,43 @@ import { useRoute } from "vue-router";
 export default {
   name: "Search",
   setup() {
+    const store = useStore();
+
     /**
-     * Search INPUT debouncing and clearing.
+     * Search INPUT updating & clearing.
+     * If input comes from URL, fetch users immediately, no need to wait
      */
     const timeout = ref(null);
 
     const input = reactive({
-      debouncedSearchInput: "",
+      // TODO: Needs cleanup
       searchInput: computed({
         get() {
-          return input.debouncedSearchInput;
+          return store.state.searchInput;
         },
         set(val) {
           if (timeout.value) clearTimeout(timeout.value);
+          if (route.query.q && !store.state.searchInput) {
+            store.commit("setSearchInput", route.query.q);
+            store.dispatch("fetchUsers");
+            return;
+          }
           timeout.value = setTimeout(() => {
-            input.debouncedSearchInput = val;
+            store.commit("setSearchInput", val);
           }, 1000);
         },
       }),
     });
 
     function clearInput() {
-      input.debouncedSearchInput = "";
+      store.commit("setSearchInput", "");
       clearTimeout(timeout.value);
     }
 
     /**
-     * Make a REQUEST to graphQl API (or local cache) each time search input updates.
-     * @param {number} number_of_users The number of users returned per page.
-     * @param {number} number_of_repos The number of repos returned for each user.
-     * TODO: Pagination for both users and repos
-     * TODO: Cache received data
+     * Fill in search input value with value from query in url.
+     * Automatically makes a call to API using that query.
      */
-
-    function authPlugin({ opContext }) {
-      opContext.headers.Authorization = `Bearer ${process.env.VUE_APP_GITHUB_GRAPHQL_AUTH_TOKEN}`;
-    }
-    const client = createClient({
-      url: "https://api.github.com/graphql",
-      use: [authPlugin, ...defaultPlugins()],
-    });
-
-    const store = useStore();
-
-    const number_of_users = 10;
-    const number_of_repos = 10;
-    let variables = {
-      number_of_users,
-      number_of_repos,
-    };
-
     const route = useRoute();
     watch(
       () => route.query,
@@ -89,12 +75,15 @@ export default {
       { immediate: true }
     );
 
+    /**
+     * Make a REQUEST to graphQl API (or local cache) each time search input updates.
+     */
     watch(
-      () => input.debouncedSearchInput,
+      () => input.searchInput,
       (val) => {
         if (val !== "") {
-          variables = { ...variables, searchQuery: val };
-          store.dispatch("fetchUsers", { client, variables });
+          store.commit("setSearchInput", val);
+          store.dispatch("fetchUsers");
         }
       }
     );

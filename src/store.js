@@ -1,11 +1,16 @@
 import { createStore } from 'vuex';
 import { UsersWithRepos } from "@/utils/queries";
 import router from "./router";
+import { client } from "./main";
 
 const state = {
   users: [],
+  usersPerPage: 10,
+  reposPerUser: 10,
   emptyResults: false,
-  isLoading: false
+  isLoading: false,
+  pagination: { hasNextPage: false, endCursor: null },
+  searchInput: ''
 };
 
 const mutations = {
@@ -15,39 +20,63 @@ const mutations = {
   setIsLoading(state, payload) {
     state.isLoading = payload;
   },
-  FETCH_USERS(state, users) {
+  setPagination(state, payload) {
+    state.pagination = payload;
+  },
+  setSearchInput(state, payload) {
+    state.searchInput = payload;
+  },
+  setUsers(state, users) {
     state.users = users;
     if (state.users.length === 0) state.emptyResults = true;
+  },
+  appendUsers(state, users) {
+    state.users = [...state.users, ...users];
   }
 };
 
 const actions = {
-  async fetchUsers({ commit }, payload) {
+  fetchUsers({ commit }, payload) {
     commit("setEmptyResults", false);
     commit("setIsLoading", true);
+
     const afterFetch = () => {
       commit("setIsLoading", false);
-      router.replace({ path: "search", query: { q: payload.variables.searchQuery } });
+      router.replace({ path: "search", query: { q: state.searchInput } });
     };
 
-    const localResults = JSON.parse(localStorage.getItem(payload.variables.searchQuery));
+    const localResults = JSON.parse(localStorage.getItem(state.searchInput));
 
-    if (localResults) {
-      commit("FETCH_USERS", localResults);
+    if (localResults && !payload?.append) {
+      commit("setUsers", localResults);
       afterFetch();
       return;
     }
-    payload.client
+
+    client
       .executeQuery({
         query: UsersWithRepos,
-        variables: payload.variables,
+        variables: {
+          number_of_users: state.usersPerPage,
+          number_of_repos: state.reposPerUser,
+          searchQuery: state.searchInput,
+          cursor: state.pagination.endCursor,
+        },
       })
       .then((response) => {
-        commit("FETCH_USERS", response.data.search.edges);
-        localStorage.setItem(payload.variables.searchQuery, JSON.stringify(response.data.search.edges));
+        const res = response.data.search;
+
+        if (payload?.append) {
+          commit("appendUsers", res.edges);
+        } else {
+          commit("setUsers", res.edges);
+        }
+
+        commit("setPagination", { hasNextPage: res.pageInfo.hasNextPage, endCursor: res.pageInfo.endCursor });
+        localStorage.setItem(state.searchInput, JSON.stringify(state.users));
       })
       .catch((error) => {
-        console.error(error.statusText);
+        console.error(error);
       })
       .finally(() => {
         afterFetch();

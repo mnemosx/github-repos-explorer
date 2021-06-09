@@ -10,6 +10,18 @@ import { faHeart as faHeartR, faUserCircle } from '@fortawesome/free-regular-svg
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 library.add(faSearch, faTrash, faHeart, faHeartR, faHeartBroken, faStar, faCodeBranch, faCheck, faTimes, faLongArrowAltRight, faUserCircle);
 
+/* villus setup */
+import { createClient, defaultPlugins } from "villus";
+
+function authPlugin({ opContext }) {
+  opContext.headers.Authorization = `Bearer ${process.env.VUE_APP_GITHUB_GRAPHQL_AUTH_TOKEN}`;
+}
+
+export const client = createClient({
+  url: "https://api.github.com/graphql",
+  use: [authPlugin, ...defaultPlugins()],
+});
+
 const app = createApp(App);
 app.use(router);
 app.use(store);
