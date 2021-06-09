@@ -11,7 +11,7 @@
         style="width: 300px; height: 300px; margin: 0 auto"
       ></div>
     </div>
-
+    <!-- FIXME: v-if on <Results /> instead of inside it -->
     <Results />
     <loading
       v-model:active="isLoading"

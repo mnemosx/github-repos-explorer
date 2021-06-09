@@ -23,6 +23,7 @@ export default {
 
 body {
   background-color: $color-bg;
+  padding-bottom: 5em;
 }
 
 #app {

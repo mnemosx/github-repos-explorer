@@ -1,5 +1,11 @@
 <template>
-  <a v-if="isLink" :href="url" target="_blank" class="card-btn">
+  <a
+    v-if="isLink"
+    :href="url"
+    target="_blank"
+    rel="noreferrer"
+    class="card-btn"
+  >
     {{ text }}
     <font-awesome-icon v-if="hasArrow" icon="long-arrow-alt-right" />
   </a>
