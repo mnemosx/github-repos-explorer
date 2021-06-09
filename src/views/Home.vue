@@ -1,6 +1,19 @@
 <template>
   <div class="container">
     <Search />
+    <h1>
+      Type a GitHub user or login name in the search bar above to browse user
+      repositories
+    </h1>
+    <lottie-player
+      src="https://assets2.lottiefiles.com/private_files/lf30_tgcfgayc.json"
+      background="transparent"
+      speed="1"
+      style="width: 300px; height: 300px; margin: 0 auto"
+      loop
+      autoplay
+    ></lottie-player>
+
     <Results />
     <loading
       v-model:active="isLoading"
