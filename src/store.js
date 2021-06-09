@@ -25,6 +25,18 @@ const actions = {
   async fetchUsers({ commit }, payload) {
     commit("setEmptyResults", false);
     commit("setIsLoading", true);
+    const afterFetch = () => {
+      commit("setIsLoading", false);
+      router.replace({ path: "search", query: { q: payload.variables.searchQuery } });
+    };
+
+    const localResults = JSON.parse(localStorage.getItem(payload.variables.searchQuery));
+
+    if (localResults) {
+      commit("FETCH_USERS", localResults);
+      afterFetch();
+      return;
+    }
     payload.client
       .executeQuery({
         query: UsersWithRepos,
@@ -32,13 +44,13 @@ const actions = {
       })
       .then((response) => {
         commit("FETCH_USERS", response.data.search.edges);
+        localStorage.setItem(payload.variables.searchQuery, JSON.stringify(response.data.search.edges));
       })
       .catch((error) => {
         console.error(error.statusText);
       })
       .finally(() => {
-        commit("setIsLoading", false);
-        router.replace({ path: "search", query: { q: payload.variables.searchQuery } });
+        afterFetch();
       });
   }
 };
