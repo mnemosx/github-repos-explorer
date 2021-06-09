@@ -28,10 +28,6 @@
         </div>
       </div>
     </div>
-    <div v-if="emptyResults" class="error-wrapper">
-      <font-awesome-icon icon="heart-broken" size="10x" flip="horizontal" />
-      No results :(
-    </div>
   </div>
 </template>
 
@@ -47,23 +43,14 @@ export default {
   setup() {
     const store = useStore();
     const results = computed(() => store.state.users);
-    const emptyResults = computed(() => store.state.emptyResults);
     return {
       results,
-      emptyResults,
     };
   },
 };
 </script>
 
 <style scoped lang="scss">
-.error-wrapper {
-  margin-top: 20vh;
-  @include center-flex-vh;
-  @include col;
-  font-size: 1.5em;
-}
-
 .user-card-wrapper {
   @include col;
 

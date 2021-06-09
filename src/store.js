@@ -3,12 +3,16 @@ import { UsersWithRepos } from "@/utils/queries";
 
 const state = {
   users: [],
-  emptyResults: false
+  emptyResults: false,
+  isLoading: false
 }
 
 const mutations = {
   setEmptyResults(state, payload) {
     state.emptyResults = payload
+  },
+  setIsLoading(state, payload) {
+    state.isLoading = payload
   },
   FETCH_USERS(state, users) {
     state.users = users
@@ -19,6 +23,7 @@ const mutations = {
 const actions = {
   async fetchUsers({ commit }, payload) {
     commit("setEmptyResults", false)
+    commit("setIsLoading", true)
     payload.client
       .executeQuery({
         query: UsersWithRepos,
@@ -26,6 +31,7 @@ const actions = {
       })
       .then((response) => {
         commit("FETCH_USERS", response.data.search.edges);
+        commit("setIsLoading", false)
       })
       .catch((error) => {
         console.error(error.statusText);
