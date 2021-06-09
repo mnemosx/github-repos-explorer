@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="user-card-wrapper">
-      <div v-for="item in results" :key="item.node.name" class="user-card">
+      <div v-for="item in results" :key="item.node.login" class="user-card">
         <div class="card-title">
           <h2>{{ item.node.name || item.node.login }}</h2>
         </div>
