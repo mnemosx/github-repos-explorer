@@ -16,29 +16,21 @@
         @click="clearInput"
       />
     </div>
-    <div v-if="isFetching">Loading...</div>
-    <div v-if="error">Sorry, something went wrong.</div>
-    <div v-else>
-      {{ Results }}
-    </div>
   </div>
 </template>
 
 <script>
-import { useClient, useQuery, defaultPlugins } from "villus";
-import { ref, toRefs, reactive, computed } from "vue";
+import { createClient, defaultPlugins } from "villus";
+import { ref, toRefs, reactive, computed, watch } from "vue";
 import { UsersWithRepos } from "@/utils/queries";
 
 export default {
   name: "Search",
   setup() {
-    function authPlugin({ opContext }) {
-      opContext.headers.Authorization = `Bearer ${process.env.VUE_APP_GITHUB_GRAPHQL_AUTH_TOKEN}`;
-    }
-    useClient({
-      url: "https://api.github.com/graphql",
-      use: [authPlugin, ...defaultPlugins()],
-    });
+    const number_of_users = 10;
+    const number_of_repos = 10;
+
+    const timeout = ref(null);
 
     const input = reactive({
       debouncedSearchInput: "",
@@ -55,40 +47,41 @@ export default {
       }),
     });
 
-    const timeout = ref(null);
-
-    const number_of_users = 10;
-    const number_of_repos = 10;
-
-    const variables = computed(() => {
-      return {
-        searchQuery: input.debouncedSearchInput,
-        number_of_users,
-        number_of_repos,
-      };
-    });
-    const {
-      data: Results,
-      error,
-      isFetching,
-    } = useQuery({
-      query: UsersWithRepos,
-      fetchOnMount: false,
-      variables,
-    });
-
     function clearInput() {
       input.debouncedSearchInput = "";
       clearTimeout(timeout.value);
     }
 
+    function authPlugin({ opContext }) {
+      opContext.headers.Authorization = `Bearer ${process.env.VUE_APP_GITHUB_GRAPHQL_AUTH_TOKEN}`;
+    }
+    const client = createClient({
+      url: "https://api.github.com/graphql",
+      use: [authPlugin, ...defaultPlugins()],
+    });
+
+    watch(
+      () => input.debouncedSearchInput,
+      (val) => {
+        client // TODO: move query execution to vuex action
+          .executeQuery({
+            query: UsersWithRepos,
+            variables: {
+              searchQuery: val,
+              number_of_users,
+              number_of_repos,
+            },
+          })
+          .then((response) => {
+            console.log(response.data.search.edges);
+            // then get the response data to vuex store
+          }); // TODO: handle errors and isFetching state manually
+      }
+    );
+
     return {
       ...toRefs(input),
-      input,
       clearInput,
-      Results,
-      error,
-      isFetching,
     };
   },
 };
