@@ -1,8 +1,12 @@
 <template>
-  <a :href="url" target="_blank" class="card-btn">
+  <a v-if="isLink" :href="url" target="_blank" class="card-btn">
     {{ text }}
     <font-awesome-icon v-if="hasArrow" icon="long-arrow-alt-right" />
   </a>
+  <button v-else class="card-btn" @click="$emit('clicked')">
+    {{ text }}
+    <font-awesome-icon v-if="hasArrow" icon="long-arrow-alt-right" />
+  </button>
 </template>
 
 <script>
@@ -18,17 +22,16 @@ export default {
       type: String,
       default: "Open",
     },
+    isLink: {
+      default: false,
+      type: Boolean,
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
 .card-btn {
-  opacity: 0;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  transform: translate(-10%, 50%);
   padding: 10px 10px;
   text-transform: uppercase;
   text-decoration: none;

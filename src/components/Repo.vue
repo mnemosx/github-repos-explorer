@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <Button :url="repo.url" />
+    <Button :url="repo.url" isLink class="repo-btn" />
   </div>
 </template>
 
@@ -126,6 +126,13 @@ export default {
         border-left: 1px solid rgba($color-border-light, 0.1);
       }
     }
+  }
+  .repo-btn {
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    transform: translate(-10%, 50%);
   }
 }
 </style>
