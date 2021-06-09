@@ -32,7 +32,6 @@ const actions = {
       })
       .then((response) => {
         commit("FETCH_USERS", response.data.search.edges);
-
       })
       .catch((error) => {
         console.error(error.statusText);

@@ -23,6 +23,7 @@
 import { createClient, defaultPlugins } from "villus";
 import { ref, toRefs, reactive, computed, watch } from "vue";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 
 export default {
   name: "Search",
@@ -76,6 +77,17 @@ export default {
       number_of_users,
       number_of_repos,
     };
+
+    const route = useRoute();
+    watch(
+      () => route.query,
+      () => {
+        if (route.query.q) {
+          input.searchInput = route.query.q;
+        }
+      },
+      { immediate: true }
+    );
 
     watch(
       () => input.debouncedSearchInput,
