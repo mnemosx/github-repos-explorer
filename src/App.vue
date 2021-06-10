@@ -33,7 +33,6 @@ body {
   text-align: center;
   color: $color-main;
   width: 90%;
-  max-width: 990px;
   margin: 0 auto;
 }
 

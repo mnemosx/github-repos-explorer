@@ -13,8 +13,8 @@
 :heavy_check_mark: User list is paginated (using 'Load More' button)  
 :heavy_check_mark: Fetched data is cached in memory and also in localStorage (for persistence between app launches)  
 :heavy_check_mark: 'No results' page is displayed when request returns 0 items  
-:heavy_multiplication_x: Start screen displays past searches which are persistent between app launches  
-:heavy_multiplication_x: Mobile friendly  
+:heavy_check_mark: Start screen displays past searches (last 15 by FIFO) which are persistent between app launches  
+:heavy_check_mark: Mobile friendly  
 :heavy_multiplication_x: Tested using Cypress  
 :heavy_multiplication_x: User can like repos  
 

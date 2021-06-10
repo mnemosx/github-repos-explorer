@@ -92,8 +92,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.container {
+  @include sm {
+    width: 95vw;
+  }
+}
 .search {
   margin: 5em auto 4em;
+  @include sm {
+    margin: 2.2em auto 3em;
+  }
   position: relative;
 
   &__input {

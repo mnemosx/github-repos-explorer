@@ -6,10 +6,7 @@
         Type a GitHub user or login name in the search bar above to browse user
         repositories
       </h1>
-      <div
-        ref="lottieContainer"
-        style="width: 300px; height: 300px; margin: 0 auto 5em"
-      ></div>
+      <div ref="lottieContainer" class="lottie-container"></div>
     </div>
     <SearchHistory
       v-if="!route.query.q && localStorage.getItem('searchHistory')"
@@ -78,3 +75,20 @@ export default {
 };
 </script>
 
+<style lang="scss" scoped>
+h1 {
+  @include sm {
+    font-size: 1.5em;
+  }
+}
+.lottie-container {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto 5em;
+  @include sm {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 2em;
+  }
+}
+</style>

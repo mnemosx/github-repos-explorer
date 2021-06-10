@@ -67,9 +67,13 @@ export default {
 .container {
   @include col;
   position: relative;
+  @include sm {
+    width: 100vw;
+  }
 
   .user-card {
     @include col;
+    position: relative;
     margin-bottom: 60px;
 
     .card-title {
@@ -85,6 +89,13 @@ export default {
         font-size: 1.6em;
         margin-bottom: 0.5em;
         padding-right: 15px;
+        @include sm {
+          margin-left: 60px;
+          font-size: 1.3em;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
     }
 
@@ -104,10 +115,20 @@ export default {
         width: 150px;
         margin-right: 20px;
         border-radius: $border-radius-small * 2;
+        @include sm {
+          position: absolute;
+          top: -20px;
+          left: 0;
+          height: 50px;
+          width: 50px;
+        }
       }
       .horizontal {
         justify-content: space-between;
         width: calc(100% - 170px);
+        @include sm {
+          width: 100%;
+        }
       }
     }
   }
@@ -116,6 +137,7 @@ export default {
     margin: 0 auto;
     width: 90%;
     max-width: 300px;
+    height: 4em;
   }
 }
 </style>
@@ -129,5 +151,13 @@ export default {
 .horizontal .v-hl-container::-webkit-scrollbar {
   width: 0;
   height: 0;
+}
+</style>
+
+<style lang="scss">
+.horizontal .v-hl-btn {
+  @include sm {
+    display: none !important;
+  }
 }
 </style>

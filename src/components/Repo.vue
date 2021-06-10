@@ -97,9 +97,6 @@ export default {
       margin-left: 10px;
       font-size: 1.2em;
       font-weight: 400;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
     }
   }
   .repo-stats {
@@ -132,6 +129,10 @@ export default {
     right: 0;
     bottom: 0;
     transform: translate(-10%, 50%);
+    @include sm {
+      opacity: 1;
+      right: auto;
+    }
   }
 }
 </style>
