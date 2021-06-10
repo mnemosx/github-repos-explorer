@@ -25,6 +25,9 @@ body {
   background-color: $color-bg;
   padding-bottom: 5em;
 }
+html {
+  overflow-x: hidden;
+}
 
 #app {
   font-family: $sans-serif-font;

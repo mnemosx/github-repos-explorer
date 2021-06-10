@@ -67,9 +67,6 @@ export default {
 .container {
   @include col;
   position: relative;
-  @include sm {
-    width: 100vw;
-  }
 
   .user-card {
     @include col;
@@ -126,8 +123,9 @@ export default {
       .horizontal {
         justify-content: space-between;
         width: calc(100% - 170px);
+
         @include sm {
-          width: 100%;
+          width: 100vw;
         }
       }
     }

@@ -92,11 +92,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.container {
-  @include sm {
-    width: 95vw;
-  }
-}
 .search {
   margin: 5em auto 4em;
   @include sm {
