@@ -43,6 +43,27 @@ const actions = {
     const afterFetch = () => {
       commit("setIsLoading", false);
       router.replace({ path: "search", query: { q: state.searchInput } });
+
+      let searchHistorySaved = localStorage.getItem('searchHistory') ? JSON.parse(localStorage.getItem('searchHistory')) : [];
+      searchHistorySaved.push({ value: state.searchInput, time: Date.now() });
+      /* Remove duplicate values leaving the newest ones.  */
+      /* FIXME: Perhaps duplicate prevention should be handled while pushing new value to array.  */
+      let searchHistoryDeduped = searchHistorySaved
+        .slice()
+        .reverse()
+        .filter((v, i, a) => a.findIndex((t) => t.value === v.value) === i);
+
+
+      let searchHistorySorted = searchHistoryDeduped.sort((a, b) =>
+        a.time > b.time ? -1 : b.time > a.time ? 1 : 0
+      );
+
+      // Keep only 15 newest entries
+      if (searchHistorySorted.length > 15) {
+        searchHistorySorted.pop();
+      }
+
+      localStorage.setItem('searchHistory', JSON.stringify(searchHistorySorted));
     };
 
     const localResults = JSON.parse(localStorage.getItem(state.searchInput));
