@@ -2,7 +2,7 @@
 
 <img alt="JavaScript" src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"/><img alt="Vue.js" src="https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vue-dot-js&logoColor=%234FC08D"/><img alt="SASS" src="https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white"/><img alt="GraphQL" src="https://img.shields.io/badge/-GraphQL-E10098?style=for-the-badge&logo=graphql"/><img alt="GitHub" src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white"/>
 
-### [LIVE DEMO: github-repos-xplorer.netlify.app](https://github-repos-xplorer.netlify.app/#/) :link:
+### [LIVE SITE: https://repos.andis.dev/](https://repos.andis.dev/) :link: [![Netlify Status](https://api.netlify.com/api/v1/badges/458b9c64-f0f8-4d1c-8056-b75fb7bf3240/deploy-status)](https://app.netlify.com/sites/github-repos-xplorer/deploys)
 
 ## App lets you search GitHub users and browse their repositories. 
 
@@ -37,7 +37,7 @@
     <img src="./lighthouse.svg" width="600px">
 </p>
 <p align="center">
-  :point_up: Tested against <a href="https://pagespeed-insights.herokuapp.com/?url=https://github-repos-xplorer.netlify.app/#/search?q=dave">https://github-repos-xplorer.netlify.app/#/search?q=dave</a>
+  :point_up: Tested against <a href="https://pagespeed-insights.herokuapp.com/?url=https://repos.andis.dev/search?q=dave">https://repos.andis.dev/search?q=dave</a>
 </p>
 
 <br />  
