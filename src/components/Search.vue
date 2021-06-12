@@ -1,22 +1,22 @@
 <template>
-  <div class="container">
-    <div class="search">
-      <input
-        v-model.trim="searchInput"
-        type="search"
-        id="search-input"
-        class="search__input"
-        placeholder="Search for a GitHub user"
-      />
-      <font-awesome-icon
-        v-if="searchInput"
-        icon="trash"
-        class="search__delete"
-        size="lg"
-        @click="clearInput"
-      />
-    </div>
-  </div>
+  <!-- <div class="container"> -->
+  <section class="search">
+    <input
+      v-model.trim="searchInput"
+      type="search"
+      id="search-input"
+      class="search__input"
+      placeholder="Search for a GitHub user"
+    />
+    <font-awesome-icon
+      v-if="searchInput"
+      icon="trash"
+      class="search__delete"
+      size="lg"
+      @click="clearInput"
+    />
+  </section>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -93,7 +93,7 @@ export default {
 
 <style scoped lang="scss">
 .search {
-  margin: 5em auto 4em;
+  width: 100%;
   @include sm {
     margin: 2.2em auto 3em;
   }

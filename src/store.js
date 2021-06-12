@@ -50,6 +50,16 @@ const mutations = {
     }
 
     state.likes = [...state.likes, payload];
+  },
+  unlike(state, payload) {
+    // FIXME: For reasons unknown calling toggleLike from Slideout.vue calls it twice, 
+    // thus first removing repo from likes and then adding it back again.
+    // After fixing this bug, this mutation should be removed.
+    const isLiked = state.likes.some(item => item.id === payload);
+
+    if (isLiked) {
+      state.likes.splice(state.likes.findIndex(item => item.id === payload), 1);
+    }
   }
 };
 
