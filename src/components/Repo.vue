@@ -2,16 +2,10 @@
   <div class="repo">
     <div class="repo-header">
       <font-awesome-icon
-        v-if="liked"
-        :icon="['fas', 'heart']"
+        :icon="[`fa${isLiked ? 's' : 'r'}`, 'heart']"
         size="lg"
         class="repo-heart"
-      />
-      <font-awesome-icon
-        v-else
-        :icon="['far', 'heart']"
-        size="lg"
-        class="repo-heart"
+        @click="toggleLike"
       />
       <h3>{{ repo.name }}</h3>
     </div>
@@ -48,16 +42,24 @@
 
 <script>
 import Button from "@/components/Button.vue";
-import { ref } from "vue";
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
   name: "Repo",
   components: { Button },
   props: ["repo"],
-  setup() {
-    const liked = ref(false);
+  setup(props) {
+    const store = useStore();
+    const isLiked = computed(() =>
+      store.state.likes.find((x) => x.id === props.repo.id)
+    );
+    const toggleLike = () => {
+      store.commit("toggleLike", props.repo);
+    };
     return {
-      liked,
+      isLiked,
+      toggleLike,
     };
   },
 };

@@ -16,6 +16,7 @@ export const UsersWithRepos = `
               totalCount
               edges {
                 node {
+                  id
                   name
                   stargazerCount
                   isFork

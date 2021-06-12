@@ -11,7 +11,8 @@ const state = {
   emptyResults: false,
   isLoading: false,
   pagination: { hasNextPage: false, endCursor: null },
-  searchInput: ''
+  searchInput: '',
+  likes: [],
 };
 
 const mutations = {
@@ -33,6 +34,15 @@ const mutations = {
   },
   appendUsers(state, users) {
     state.users = [...state.users, ...users];
+  },
+  toggleLike(state, payload) {
+    const isLiked = state.likes.some(item => item.id === payload.id);
+    if (isLiked) {
+      state.likes.splice(state.likes.findIndex(item => item.id === payload.id), 1);
+      return;
+    }
+
+    state.likes = [...state.likes, payload];
   }
 };
 
