@@ -51,12 +51,18 @@ export default {
   props: ["repo"],
   setup(props) {
     const store = useStore();
-    const isLiked = computed(() =>
-      store.state.likes.find((x) => x.id === props.repo.id)
+
+    const isLiked = computed(
+      () =>
+        store.state.likes &&
+        store.state.likes.length &&
+        store.state.likes.find((x) => x.id === props.repo.id)
     );
+
     const toggleLike = () => {
       store.commit("toggleLike", props.repo);
     };
+
     return {
       isLiked,
       toggleLike,

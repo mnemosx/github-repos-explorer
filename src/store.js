@@ -16,6 +16,12 @@ const state = {
 };
 
 const mutations = {
+  initializeStore(state) {
+    const storedLikes = JSON.parse(localStorage.getItem('likes'));
+    if (storedLikes && storedLikes.length) {
+      state.likes = storedLikes;
+    }
+  },
   setEmptyResults(state, payload) {
     state.emptyResults = payload;
   },
@@ -37,6 +43,7 @@ const mutations = {
   },
   toggleLike(state, payload) {
     const isLiked = state.likes.some(item => item.id === payload.id);
+
     if (isLiked) {
       state.likes.splice(state.likes.findIndex(item => item.id === payload.id), 1);
       return;

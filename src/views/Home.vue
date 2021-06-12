@@ -55,6 +55,7 @@ export default {
         autoplay: true,
         animationData,
       });
+      store.commit("initializeStore");
     });
 
     const onSearchPicked = (val) => {

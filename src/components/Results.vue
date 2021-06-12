@@ -50,6 +50,10 @@ export default {
     const store = useStore();
     const results = computed(() => store.state.users);
 
+    window.addEventListener("beforeunload", () => {
+      localStorage.setItem("likes", JSON.stringify(store.state.likes));
+    });
+
     const loadMore = () => {
       store.dispatch("fetchUsers", { append: true });
     };
