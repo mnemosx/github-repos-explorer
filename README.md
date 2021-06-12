@@ -15,18 +15,18 @@
 :heavy_check_mark: 'No results' page is displayed when request returns 0 items  
 :heavy_check_mark: Start screen displays past searches (last 15 by FIFO) which are persistent between app launches  
 :heavy_check_mark: Mobile friendly  
+:heavy_check_mark: User can like repos  
 :heavy_multiplication_x: Tested using Cypress  
-:heavy_multiplication_x: User can like repos  
 
 
 ### Additionaly
-:heavy_multiplication_x: Skip users with 0 repos  
-:heavy_multiplication_x: Liked repos are gathered together in a separate page  
+:heavy_check_mark: Liked repos are gathered together in a separate page  
 :heavy_check_mark: Repos are sorted by most starred  
+:heavy_check_mark: User can use URL queries (/search?q=something) to directly search for users on page load   
+:heavy_multiplication_x: Skip users with 0 repos  
 :heavy_multiplication_x: If number of repos > 15 (or so), show the rest in compact list in expansion component  
    -- Alternatively, request more repos when user has scrolled all the way right  
    -- Alternatively, just display only the first 15 (or so) most starred repos for each user  
-:heavy_check_mark: User can use URL queries (/search?q=something) to directly search for users on page load   
 :heavy_multiplication_x: Search bar stays fixed to top when scrolling   
 
 <br />  
