@@ -42,6 +42,8 @@
 
 <script>
 import Button from "@/components/Button.vue";
+import styles from "./Repo.vue?vue&type=style&index=0&lang=scss&module=1";
+
 import { computed } from "vue";
 import { useStore } from "vuex";
 
@@ -64,6 +66,7 @@ export default {
     };
 
     return {
+      styles,
       isLiked,
       toggleLike,
     };

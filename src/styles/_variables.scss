@@ -12,6 +12,18 @@ $color-green-light: hsla(157, 100%, 72%, 0.3);
 $color-border-light: rgb(128, 128, 128);
 $color-box-shadow-accent: rgb(137, 220, 245);
 
+:export {
+  bgColor: $color-bg;
+  mainColor: $color-main;
+  whiteColor: $color-white;
+  accentColor: $color-accent;
+  redDarkColor: $color-red-dark;
+  redLightColor: $color-red-light;
+  greenLightColor: $color-green-light;
+  borderLightColor: $color-border-light;
+  boxShadowAccentColor: $color-box-shadow-accent;
+}
+
 $border-radius-small: 5px;
 
 $breakpoint-middle: 1050px;
