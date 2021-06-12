@@ -4,7 +4,8 @@
       <font-awesome-icon
         :icon="[`fa${isLiked ? 's' : 'r'}`, 'heart']"
         size="lg"
-        class="repo-heart"
+        :color="isLiked ? styles.redDarkColor : styles.mainColor"
+        :class="[{ 'repo-heart__liked': isLiked }, 'repo-heart']"
         @click="toggleLike"
       />
       <h3>{{ repo.name }}</h3>
@@ -17,8 +18,8 @@
         <div
           :style="{
             background: repo.isFork
-              ? 'rgba(113, 255, 200, 0.3)'
-              : 'rgba(250, 94, 159, 0.1)',
+              ? styles.greenLightColor
+              : styles.redLightColor,
           }"
         >
           <font-awesome-icon icon="check" v-if="repo.isFork" />
@@ -101,6 +102,11 @@ export default {
       &:hover {
         color: $color-red-dark;
         cursor: pointer;
+      }
+      &__liked {
+        &:hover {
+          color: $color-main;
+        }
       }
     }
 
