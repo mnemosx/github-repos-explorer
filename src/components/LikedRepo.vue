@@ -74,8 +74,10 @@ export default {
     color: $color-main;
     text-decoration: none;
     word-wrap: break-word;
-    &:hover {
-      text-decoration: underline;
+    @media (hover: hover) {
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }

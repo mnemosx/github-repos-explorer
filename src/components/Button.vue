@@ -53,11 +53,17 @@ export default {
   svg {
     margin-left: 10px;
   }
-  &:hover {
-    color: $color-accent;
-    background-color: $color-white;
-    box-shadow: 0 2px 10px rgba($color-box-shadow-accent, 1);
-    cursor: pointer;
+  @media (hover: hover) {
+    &:hover {
+      color: $color-accent;
+      background-color: $color-white;
+      box-shadow: 0 2px 10px rgba($color-box-shadow-accent, 1);
+      cursor: pointer;
+    }
+  }
+  &:active {
+    background-color: $color-main;
+    color: $color-white;
   }
 }
 </style>

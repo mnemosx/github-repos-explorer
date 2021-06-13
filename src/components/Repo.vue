@@ -97,15 +97,17 @@ export default {
   .repo-header {
     @include center-flex-v;
 
-    .repo-heart {
-      @include transition;
-      &:hover {
-        color: $color-red-dark;
-        cursor: pointer;
-      }
-      &__liked {
+    @media (hover: hover) {
+      .repo-heart {
+        @include transition;
         &:hover {
-          color: $color-main;
+          color: $color-red-dark;
+          cursor: pointer;
+        }
+        &__liked {
+          &:hover {
+            color: $color-main;
+          }
         }
       }
     }
