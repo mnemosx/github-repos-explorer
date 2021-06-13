@@ -8,7 +8,7 @@
           size="lg"
           :color="styles.redDarkColor"
           class="toggle-likes-btn"
-          @click="isOpen = !isOpen"
+          @click="toggleSlideout"
         />
       </article>
       <Search />
@@ -35,7 +35,7 @@
 
     <Slideout
       :show="isOpen"
-      @close="isOpen = !isOpen"
+      @close="toggleSlideout"
       :color="styles.redDarkColor"
     />
   </div>
@@ -73,7 +73,14 @@ export default {
     const isLoading = computed(() => store.state.isLoading);
     const emptyResults = computed(() => store.state.emptyResults);
     const route = useRoute();
+
     const isOpen = ref(false);
+    const toggleSlideout = () => {
+      isOpen.value = !isOpen.value;
+      isOpen.value
+        ? document.documentElement.classList.add("noscroll")
+        : document.documentElement.classList.remove("noscroll");
+    };
 
     const lottieContainer = ref(null);
     onMounted(() => {
@@ -103,10 +110,17 @@ export default {
       onSearchPicked,
       localStorage,
       styles,
+      toggleSlideout,
     };
   },
 };
 </script>
+
+<style>
+.noscroll {
+  overflow: hidden;
+}
+</style>
 
 <style lang="scss" scoped>
 .container {

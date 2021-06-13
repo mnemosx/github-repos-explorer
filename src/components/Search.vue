@@ -94,9 +94,6 @@ export default {
 <style scoped lang="scss">
 .search {
   width: 100%;
-  @include sm {
-    margin: 2.2em auto 3em;
-  }
   position: relative;
 
   &__input {
