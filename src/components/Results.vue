@@ -10,20 +10,14 @@
           :alt="item.node.name || item.node.login"
           class="user-avatar"
         />
-        <template v-if="item.node.repositories?.edges.length">
-          <vue-horizontal class="horizontal">
-            <template
-              v-for="(repo, idx) in item.node.repositories.edges"
-              :key="idx"
-            >
-              <Repo :repo="repo.node" />
-            </template>
-          </vue-horizontal>
-        </template>
-        <div v-else class="no-repos">
-          <p>This user has no repositories</p>
-          <font-awesome-icon icon="heart-broken" size="lg" />
-        </div>
+        <vue-horizontal class="horizontal">
+          <template
+            v-for="(repo, idx) in item.node.repositories.edges"
+            :key="idx"
+          >
+            <Repo :repo="repo.node" />
+          </template>
+        </vue-horizontal>
       </div>
     </div>
     <Button

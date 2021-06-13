@@ -89,17 +89,18 @@ const actions = {
         variables: {
           number_of_users: state.usersPerPage,
           number_of_repos: state.reposPerUser,
-          searchQuery: state.searchInput,
+          searchQuery: `${state.searchInput} repos:>0`,
           cursor: state.pagination.endCursor,
         },
       })
       .then((response) => {
         const res = response.data.search;
+        const filteredUsers = res.edges.filter(user => Object.keys(user.node).length);
 
         if (payload?.append) {
-          commit("appendUsers", res.edges);
+          commit("appendUsers", filteredUsers);
         } else {
-          commit("setUsers", res.edges);
+          commit("setUsers", filteredUsers);
         }
 
         const pagination = { hasNextPage: res.pageInfo.hasNextPage, endCursor: res.pageInfo.endCursor };
