@@ -52,7 +52,7 @@ const mutations = {
     state.likes = [...state.likes, payload];
   },
   unlike(state, payload) {
-    // FIXME: For reasons unknown calling toggleLike from Slideout.vue calls it twice, 
+    // FIXME: For reasons unknown calling toggleLike from LikedRepo.vue calls it twice, 
     // thus first removing repo from likes and then adding it back again.
     // After fixing this bug, this mutation should be removed.
     const isLiked = state.likes.some(item => item.id === payload);
@@ -77,7 +77,8 @@ const actions = {
     const localResults = JSON.parse(localStorage.getItem(state.searchInput));
 
     if (localResults && !payload?.append) {
-      commit("setUsers", localResults);
+      commit("setUsers", localResults.users);
+      commit("setPagination", localResults.pagination);
       afterFetch();
       return;
     }
@@ -101,8 +102,10 @@ const actions = {
           commit("setUsers", res.edges);
         }
 
-        commit("setPagination", { hasNextPage: res.pageInfo.hasNextPage, endCursor: res.pageInfo.endCursor });
-        localStorage.setItem(state.searchInput, JSON.stringify(state.users));
+        const pagination = { hasNextPage: res.pageInfo.hasNextPage, endCursor: res.pageInfo.endCursor };
+
+        commit("setPagination", pagination);
+        localStorage.setItem(state.searchInput, JSON.stringify({ users: state.users, pagination }));
       })
       .catch((error) => {
         console.error(error);
