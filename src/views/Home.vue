@@ -37,7 +37,20 @@
       :show="isOpen"
       @close="toggleSlideout"
       :color="styles.redDarkColor"
-    />
+      title="Your liked repos"
+    >
+      <div class="likes">
+        <div class="liked-repo-row title">
+          <span></span>
+          <span>Repository</span>
+          <span>Stars</span>
+          <span>Fork</span>
+        </div>
+        <template v-for="repo in likes" :key="'liked+' + repo.id">
+          <LikedRepo :repo="repo" :color="styles.redDarkColor" />
+        </template>
+      </div>
+    </Slideout>
   </div>
 </template>
 
@@ -47,6 +60,8 @@ import Results from "@/components/Results.vue";
 import EmptyResults from "@/components/EmptyResults.vue";
 import SearchHistory from "@/components/SearchHistory.vue";
 import Slideout from "@/components/Slideout.vue";
+import LikedRepo from "@/components/LikedRepo.vue";
+
 import styles from "./Home.vue?vue&type=style&index=0&lang=scss&module=1";
 import animationData from "@/assets/lottie-home.json";
 import lottie from "lottie-web";
@@ -65,14 +80,15 @@ export default {
     EmptyResults,
     SearchHistory,
     Slideout,
+    LikedRepo,
   },
   setup() {
     const store = useStore();
+    const route = useRoute();
     const results = computed(() => store.state.users);
     const likes = computed(() => store.state.likes);
     const isLoading = computed(() => store.state.isLoading);
     const emptyResults = computed(() => store.state.emptyResults);
-    const route = useRoute();
 
     const isOpen = ref(false);
     const toggleSlideout = () => {
@@ -148,6 +164,11 @@ export default {
       height: 200px;
       margin-bottom: 2em;
     }
+  }
+  .likes {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 3rem;
   }
 }
 </style>
