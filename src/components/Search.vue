@@ -101,6 +101,10 @@ export default {
     padding: 5px 10px;
     font-family: $sans-serif-font;
     font-size: 1.4em;
+    line-height: 2;
+    @include sm {
+      font-size: 1.1em;
+    }
     border: none;
     outline: none;
     border-radius: $border-radius-small;

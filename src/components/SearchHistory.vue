@@ -14,7 +14,7 @@
         </p>
       </div>
       <p class="time">
-        <span class="time-num" v-show="item.time.replace(/\D/g, '')">
+        <span class="time__num" v-show="item.time.replace(/\D/g, '')">
           {{ item.time.replace(/\D/g, "") }}
         </span>
         {{ item.time.replace(/[0-9]/g, "") }}
@@ -79,7 +79,7 @@ export default {
     }
     .left {
       @include center-flex-v;
-
+      margin-right: 20px;
       svg {
         margin-right: 15px;
         color: rgba($color-main, 0.8);
@@ -92,19 +92,23 @@ export default {
         }
       }
       .value {
+        word-break: break-all;
         @include sm {
           font-weight: 600;
           font-size: 1.15em;
         }
       }
     }
-    .time-num {
-      background-color: rgba($color-main, 0.5);
-      color: $color-white;
-      padding: 3px 10px;
-      border-radius: $border-radius-small * 2;
-      @include sm {
-        font-size: 0.85em;
+    .time {
+      white-space: nowrap;
+      &__num {
+        background-color: rgba($color-main, 0.5);
+        color: $color-white;
+        padding: 3px 10px;
+        border-radius: $border-radius-small * 2;
+        @include sm {
+          font-size: 0.85em;
+        }
       }
     }
   }

@@ -145,6 +145,9 @@ export default {
     @include center-flex-v;
     display: flex;
     margin: 5em auto 4em;
+    @include sm {
+      margin-top: 2em;
+    }
     .toggle-likes-btn {
       margin-right: 20px;
       cursor: pointer;
