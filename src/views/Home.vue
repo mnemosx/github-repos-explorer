@@ -7,8 +7,15 @@
           icon="heart"
           size="lg"
           :color="styles.redDarkColor"
-          class="toggle-likes-btn"
+          class="controls-btn"
           @click="toggleSlideout"
+        />
+        <font-awesome-icon
+          v-show="isResultsFromLS"
+          icon="sync-alt"
+          class="controls-btn controls-btn__refetch"
+          size="lg"
+          @click="refetch"
         />
       </article>
       <Search />
@@ -21,7 +28,10 @@
       <div ref="lottieContainer" class="lottie-container"></div>
     </div>
     <SearchHistory
-      v-if="!route.query.q && localStorage.getItem('searchHistory')"
+      v-if="
+        !route.query.q &&
+        JSON.parse(localStorage.getItem('searchHistory')) !== null
+      "
       @searchPicked="onSearchPicked($event)"
     />
     <!-- FIXME: v-if on <Results /> instead of inside it -->
@@ -89,6 +99,7 @@ export default {
     const likes = computed(() => store.state.likes);
     const isLoading = computed(() => store.state.isLoading);
     const emptyResults = computed(() => store.state.emptyResults);
+    const isResultsFromLS = computed(() => store.state.isResultsFromLS);
 
     const isOpen = ref(false);
     const toggleSlideout = () => {
@@ -115,6 +126,10 @@ export default {
       store.dispatch("fetchUsers");
     };
 
+    function refetch() {
+      store.dispatch("fetchUsers", { refetch: true });
+    }
+
     return {
       isOpen,
       likes,
@@ -127,6 +142,8 @@ export default {
       localStorage,
       styles,
       toggleSlideout,
+      isResultsFromLS,
+      refetch,
     };
   },
 };
@@ -148,9 +165,18 @@ export default {
     @include sm {
       margin-top: 2em;
     }
-    .toggle-likes-btn {
-      margin-right: 20px;
-      cursor: pointer;
+    .controls {
+      display: flex;
+      &-btn {
+        margin-right: 20px;
+        cursor: pointer;
+        &__refetch {
+          @include transition(0.2s);
+          &:hover {
+            transform: rotate(180deg);
+          }
+        }
+      }
     }
   }
   h1 {

@@ -10,6 +10,7 @@ const state = {
   reposPerUser: 10,
   emptyResults: false,
   isLoading: false,
+  isResultsFromLS: false,
   pagination: { hasNextPage: false, endCursor: null },
   searchInput: '',
   likes: [],
@@ -33,6 +34,9 @@ const mutations = {
   },
   setSearchInput(state, payload) {
     state.searchInput = payload;
+  },
+  setIsResultsFromLS(state, payload) {
+    state.isResultsFromLS = payload;
   },
   setUsers(state, users) {
     state.users = users;
@@ -76,7 +80,8 @@ const actions = {
 
     const localResults = JSON.parse(localStorage.getItem(state.searchInput));
 
-    if (localResults && !payload?.append) {
+    if (localResults && !payload?.append && !payload?.refetch) {
+      commit('setIsResultsFromLS', true);
       commit("setUsers", localResults.users);
       commit("setPagination", localResults.pagination);
       afterFetch();
@@ -90,11 +95,12 @@ const actions = {
           number_of_users: state.usersPerPage,
           number_of_repos: state.reposPerUser,
           searchQuery: `${state.searchInput} repos:>0`,
-          cursor: state.pagination.endCursor,
+          cursor: payload?.refetch ? null : state.pagination.endCursor,
         },
       })
       .then((response) => {
         const res = response.data.search;
+
         const filteredUsers = res.edges.filter(user => Object.keys(user.node).length);
 
         if (payload?.append) {
@@ -102,6 +108,7 @@ const actions = {
         } else {
           commit("setUsers", filteredUsers);
         }
+        commit('setIsResultsFromLS', false);
 
         const pagination = { hasNextPage: res.pageInfo.hasNextPage, endCursor: res.pageInfo.endCursor };
 

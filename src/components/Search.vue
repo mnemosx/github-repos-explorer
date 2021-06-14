@@ -1,5 +1,4 @@
 <template>
-  <!-- <div class="container"> -->
   <section class="search">
     <input
       v-model.trim="searchInput"
@@ -16,7 +15,6 @@
       @click="clearInput"
     />
   </section>
-  <!-- </div> -->
 </template>
 
 <script>
@@ -59,6 +57,7 @@ export default {
     /**
      * Fill in search input value with value from query in url.
      * Automatically makes a call to API using that query.
+     * TODO: Perhaps, move this to initializeStore?
      */
     watch(
       () => route.query,

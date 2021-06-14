@@ -1,6 +1,10 @@
 <template>
   <div class="container">
-    <div v-for="item in results" :key="item.node.login" class="user-card">
+    <div
+      v-for="item in results"
+      :key="item.node.name + '_' + item.node.login"
+      class="user-card"
+    >
       <div class="card-title">
         <h2>{{ item.node.name || item.node.login || "" }}</h2>
       </div>
