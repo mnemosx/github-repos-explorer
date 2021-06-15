@@ -4,8 +4,10 @@
     <div
       v-for="(item, idx) in searchHistory"
       :key="idx"
-      @click="$emit('searchPicked', item.value)"
+      @click="selectSearchFromHistory(item.value)"
+      @keyup.enter="selectSearchFromHistory(item.value)"
       class="recent-search"
+      tabindex="0"
     >
       <div class="left">
         <font-awesome-icon icon="search" size="xs" />
@@ -26,10 +28,12 @@
 <script>
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
-TimeAgo.addDefaultLocale(en);
-const timeAgo = new TimeAgo("en-US");
 export default {
-  setup() {
+  // eslint-disable-next-line vue/no-setup-props-destructure
+  setup(_, { emit }) {
+    TimeAgo.addDefaultLocale(en);
+    const timeAgo = new TimeAgo("en-US");
+
     let searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
     searchHistory =
       searchHistory &&
@@ -40,8 +44,13 @@ export default {
         };
       });
 
+    const selectSearchFromHistory = (val) => {
+      emit("searchPicked", val);
+    };
+
     return {
       searchHistory,
+      selectSearchFromHistory,
     };
   },
 };

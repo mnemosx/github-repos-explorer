@@ -54,7 +54,8 @@ export default {
     margin-left: 10px;
   }
   @media (hover: hover) {
-    &:hover {
+    &:hover,
+    &:focus {
       color: $color-accent;
       background-color: $color-white;
       box-shadow: 0 2px 10px rgba($color-box-shadow-accent, 1);

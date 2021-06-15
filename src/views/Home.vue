@@ -3,12 +3,14 @@
     <div class="top">
       <article class="controls">
         <font-awesome-icon
-          v-if="likes.length"
+          v-show="likes.length"
           icon="heart"
           size="lg"
           :color="styles.redDarkColor"
           class="controls-btn"
           @click="toggleSlideout"
+          @keyup.enter.stop="toggleSlideout(e)"
+          tabindex="0"
         />
         <font-awesome-icon
           v-show="isResultsFromLS"
@@ -16,6 +18,8 @@
           class="controls-btn controls-btn__refetch"
           size="lg"
           @click="refetch"
+          @keyup.enter="refetch"
+          tabindex="0"
         />
       </article>
       <Search />
@@ -56,8 +60,13 @@
           <span>Stars</span>
           <span>Fork</span>
         </div>
-        <template v-for="repo in likes" :key="'liked+' + repo.id">
-          <LikedRepo :repo="repo" :color="styles.redDarkColor" />
+        <template v-for="(repo, idx) in likes" :key="'liked+' + repo.id">
+          <LikedRepo
+            :repo="repo"
+            :color="styles.redDarkColor"
+            :idx="idx"
+            :lastIdx="likes.length - 1"
+          />
         </template>
       </div>
     </Slideout>
@@ -71,7 +80,6 @@ import EmptyResults from "@/components/EmptyResults.vue";
 import SearchHistory from "@/components/SearchHistory.vue";
 import Slideout from "@/components/Slideout.vue";
 import LikedRepo from "@/components/LikedRepo.vue";
-
 import styles from "./Home.vue?vue&type=style&index=0&lang=scss&module=1";
 import animationData from "@/assets/lottie-home.json";
 import lottie from "lottie-web";

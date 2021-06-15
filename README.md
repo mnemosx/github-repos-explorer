@@ -23,7 +23,8 @@
 :heavy_check_mark: Liked repos are gathered together in a separate page  
 :heavy_check_mark: Repos are sorted by most starred  
 :heavy_check_mark: User can use URL queries (/search?q=something) to directly search for users on page load   
-:heavy_multiplication_x: Skip users with 0 repos  
+:heavy_check_mark: Skip users with 0 repos  
+:heavy_check_mark: App can be navigated using keyboard  
 :heavy_multiplication_x: If number of repos > 15 (or so), show the rest in compact list in expansion component  
    -- Alternatively, request more repos when user has scrolled all the way right  
    -- Alternatively, just display only the first 15 (or so) most starred repos for each user  

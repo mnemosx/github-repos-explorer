@@ -1,8 +1,18 @@
 <template>
   <transition name="overlay">
-    <div class="slideout-overlay" v-show="show" @click="$emit('close')">
+    <div
+      class="slideout-overlay"
+      v-show="show"
+      @click="$emit('close')"
+      @keydown.esc="$emit('close')"
+    >
       <transition name="slide">
-        <aside class="slideout-container" v-if="show" @click.stop>
+        <aside
+          class="slideout-container"
+          @click.stop
+          v-show="show"
+          tabindex="0"
+        >
           <div class="slideout-container__title">
             <h2>{{ title }}</h2>
             <font-awesome-icon
@@ -10,6 +20,9 @@
               size="lg"
               aria-label="close"
               @click="$emit('close')"
+              @keyup.enter="$emit('close')"
+              tabindex="0"
+              class="first-focus-item"
             />
           </div>
           <slot></slot>
@@ -20,6 +33,8 @@
 </template>
 
 <script>
+import { nextTick, watch } from "vue";
+
 export default {
   props: {
     show: {
@@ -30,6 +45,66 @@ export default {
       type: String,
       default: "",
     },
+  },
+  setup(props) {
+    /*
+     * Keep focus inside Slideout content by
+     * shifting the focus back and forth between first and
+     * last keyboard focusable elements inside overlay.
+     * Css class 'last-focus-item' needs to be added to the element
+     * that's supposed to be last keyboard focusable element.
+     */
+
+    let lastFocusElemInOverlay, firstFocusElemInOverlay;
+    function tabFocusHandler(e) {
+      let isTabPressed = e.key === "Tab" || e.keyCode === 9;
+
+      if (!isTabPressed) {
+        return;
+      }
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstFocusElemInOverlay) {
+          lastFocusElemInOverlay.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastFocusElemInOverlay) {
+          firstFocusElemInOverlay.focus();
+          e.preventDefault();
+        }
+      }
+    }
+
+    watch(
+      () => props.show,
+      (val) => {
+        if (val) {
+          nextTick(() => {
+            firstFocusElemInOverlay =
+              document.querySelector(".first-focus-item");
+            firstFocusElemInOverlay.parentElement.parentElement.focus();
+
+            lastFocusElemInOverlay = document.querySelector(".last-focus-item");
+
+            firstFocusElemInOverlay.addEventListener(
+              "keydown",
+              tabFocusHandler
+            );
+            lastFocusElemInOverlay.addEventListener("keydown", tabFocusHandler);
+          });
+        } else {
+          firstFocusElemInOverlay.removeEventListener(
+            "keydown",
+            tabFocusHandler
+          );
+          lastFocusElemInOverlay.removeEventListener(
+            "keydown",
+            tabFocusHandler
+          );
+        }
+      }
+    );
   },
 };
 </script>
@@ -70,6 +145,9 @@ export default {
           transform: rotate(-180deg);
         }
       }
+    }
+    &:focus {
+      outline: none;
     }
   }
 }

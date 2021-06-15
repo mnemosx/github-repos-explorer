@@ -6,10 +6,21 @@
         size="lg"
         :color="color"
         @click.once="unlike(repo.id)"
+        @keyup.enter="unlike(repo.id)"
+        tabindex="0"
       />
     </span>
     <span>
-      <a :href="repo.url" target="_blank" rel="noreferrer">{{ repo.name }}</a>
+      <a
+        :href="repo.url"
+        tabindex="0"
+        :class="{
+          'last-focus-item': idx === lastIdx,
+        }"
+        target="_blank"
+        rel="noreferrer"
+        >{{ repo.name }}</a
+      >
     </span>
     <span>{{ repo.stargazerCount }}</span>
     <span>
@@ -26,6 +37,8 @@ export default {
   props: {
     repo: Object,
     color: String,
+    idx: Number,
+    lastIdx: Number,
   },
   setup() {
     const store = useStore();

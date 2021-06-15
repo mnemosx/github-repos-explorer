@@ -1,5 +1,11 @@
 <template>
-  <div class="repo">
+  <div
+    class="repo"
+    tabindex="0"
+    @keydown.enter="openLink"
+    @keydown.space="toggleLike"
+    @keydown.tab.once="emitter.emit('onTabKey')"
+  >
     <div class="repo-header">
       <font-awesome-icon
         :icon="[`fa${isLiked ? 's' : 'r'}`, 'heart']"
@@ -37,7 +43,7 @@
         </div>
       </div>
     </div>
-    <Button :url="repo.url" isLink class="repo-btn" />
+    <Button :url="repo.url" isLink class="repo-btn" tabindex="-1" />
   </div>
 </template>
 
@@ -47,6 +53,7 @@ import styles from "./Repo.vue?vue&type=style&index=0&lang=scss&module=1";
 
 import { computed } from "vue";
 import { useStore } from "vuex";
+import emitter from "@/services/emitter";
 
 export default {
   name: "Repo",
@@ -66,10 +73,16 @@ export default {
       store.commit("toggleLike", props.repo);
     };
 
+    const openLink = () => {
+      window.open(`${props.repo.url}`, "_blank");
+    };
+
     return {
       styles,
       isLiked,
       toggleLike,
+      openLink,
+      emitter,
     };
   },
 };
@@ -92,6 +105,13 @@ export default {
   }
   &:hover .card-btn {
     opacity: 1;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: inset 4px 0px 0px 0px $color-accent;
+    .repo-btn {
+      opacity: 1;
+    }
   }
 
   .repo-header {

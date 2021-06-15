@@ -6,9 +6,9 @@ import store from "./store";
 /* fontawesome */
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faSearch, faTrash, faHeart, faHeartBroken, faStar, faCodeBranch, faCheck, faTimes, faLongArrowAltRight, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faHeartR, faUserCircle } from '@fortawesome/free-regular-svg-icons';
+import { faHeart as faHeartR, faUserCircle, faKeyboard } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-library.add(faSearch, faTrash, faHeart, faHeartR, faHeartBroken, faStar, faCodeBranch, faCheck, faTimes, faLongArrowAltRight, faUserCircle, faSyncAlt);
+library.add(faSearch, faTrash, faHeart, faHeartR, faHeartBroken, faStar, faCodeBranch, faCheck, faTimes, faLongArrowAltRight, faUserCircle, faSyncAlt, faKeyboard);
 
 /* villus setup */
 import { createClient, defaultPlugins } from "villus";

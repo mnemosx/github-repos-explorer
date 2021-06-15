@@ -31,15 +31,32 @@
       :hasArrow="false"
       class="more-btn"
     />
+    <div class="key-nav-info" v-if="showKeyNavInfo">
+      <font-awesome-icon :icon="['far', 'keyboard']" size="lg" />
+      <p>
+        Press <span>space</span> to like/unlike repo. Press
+        <span>Enter</span> to open repo in new tab
+      </p>
+      <font-awesome-icon
+        icon="times"
+        size="lg"
+        aria-label="close"
+        @click="showKeyNavInfo = false"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import VueHorizontal from "vue-horizontal";
 import Repo from "@/components/Repo.vue";
 import Button from "@/components/Button.vue";
+/* We're using mitt because we need to trigger TAB key press
+ * from Repo.vue only once and Vue 3 has removed $off method
+ * https://v3.vuejs.org/guide/migration/events-api.html#overview */
+import emitter from "@/services/emitter";
 
 export default {
   name: "Results",
@@ -47,6 +64,7 @@ export default {
   setup() {
     const store = useStore();
     const results = computed(() => store.state.users);
+    const showKeyNavInfo = ref(false);
 
     window.addEventListener("beforeunload", () => {
       localStorage.setItem("likes", JSON.stringify(store.state.likes));
@@ -56,10 +74,19 @@ export default {
       store.dispatch("fetchUsers", { append: true });
     };
 
+    emitter.on("onTabKey", () => {
+      showKeyNavInfo.value = true;
+      setTimeout(() => {
+        showKeyNavInfo.value = false;
+        emitter.all.clear();
+      }, 7000);
+    });
+
     return {
       results,
       loadMore,
       store,
+      showKeyNavInfo,
     };
   },
 };
@@ -88,6 +115,10 @@ export default {
         font-size: 1.6em;
         margin-bottom: 0.5em;
         padding-right: 15px;
+        outline: none;
+        &:focus {
+          border-bottom: 1px solid red;
+        }
         @include sm {
           margin-left: 60px;
           font-size: 1.3em;
@@ -138,6 +169,30 @@ export default {
     width: 90%;
     max-width: 300px;
     height: 4em;
+  }
+}
+.key-nav-info {
+  @include center-flex-v;
+  justify-content: space-between;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  border-radius: $border-radius-small;
+  border: 3px solid $color-main;
+  background-color: $color-bg;
+  margin-bottom: 1rem;
+  padding: 10px 15px;
+  svg {
+    cursor: pointer;
+  }
+  p {
+    margin: 0 20px 0 10px;
+    span {
+      padding: 2px 5px;
+      background-color: rgba($color-box-shadow-accent, 0.5);
+      border-radius: 4px;
+    }
   }
 }
 </style>
