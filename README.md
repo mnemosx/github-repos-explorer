@@ -25,10 +25,7 @@
 :heavy_check_mark: User can use URL queries (/search?q=something) to directly search for users on page load   
 :heavy_check_mark: Skip users with 0 repos  
 :heavy_check_mark: App can be navigated using keyboard  
-:heavy_multiplication_x: If number of repos > 15 (or so), show the rest in compact list in expansion component  
-   -- Alternatively, request more repos when user has scrolled all the way right  
-   -- Alternatively, just display only the first 15 (or so) most starred repos for each user  
-:heavy_multiplication_x: Search bar stays fixed to top when scrolling   
+:heavy_check_mark: If number of repos > 10, request more repos on user input  
 
 <br />  
 <br />  
