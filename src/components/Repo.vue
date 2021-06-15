@@ -95,7 +95,7 @@ export default {
   min-width: 290px;
   @include col;
   justify-content: space-evenly;
-  margin: 2px 10px;
+  margin: 0 10px;
   padding: 0 20px 10px 20px;
   background-color: $color-white;
   border-radius: $border-radius-small;

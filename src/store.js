@@ -3,6 +3,7 @@ import { UsersWithRepos } from "@/utils/queries";
 import router from "./router";
 import { client } from "./main";
 import { updateSearchHistory } from "@/utils/utils";
+import { MoreRepos } from './utils/queries';
 
 const state = {
   users: [],
@@ -10,6 +11,7 @@ const state = {
   reposPerUser: 10,
   emptyResults: false,
   isLoading: false,
+  isLoadingMoreRepos: false,
   isResultsFromLS: false,
   pagination: { hasNextPage: false, endCursor: null },
   searchInput: '',
@@ -29,6 +31,9 @@ const mutations = {
   setIsLoading(state, payload) {
     state.isLoading = payload;
   },
+  setIsLoadingMoreRepos(state, payload) {
+    state.isLoadingMoreRepos = payload;
+  },
   setPagination(state, payload) {
     state.pagination = payload;
   },
@@ -45,6 +50,12 @@ const mutations = {
   appendUsers(state, users) {
     state.users = [...state.users, ...users];
   },
+  setMoreRepos(state, payload) {
+    const userObj = state.users.find(item => item.login === payload.user);
+    userObj.repositories.edges = [...userObj.repositories.edges, ...payload.repos];
+    userObj.repositories.pageInfo = payload.pageInfo;
+  },
+
   toggleLike(state, payload) {
     const isLiked = state.likes.some(item => item.id === payload.id);
 
@@ -68,6 +79,28 @@ const mutations = {
 };
 
 const actions = {
+  fetchMoreRepos({ commit }, payload) {
+    commit("setIsLoadingMoreRepos", true);
+    client
+      .executeQuery({
+        query: MoreRepos,
+        variables: {
+          user: payload.userLogin,
+          number_of_repos: state.reposPerUser,
+          cursor: payload.endCursor,
+        },
+      })
+      .then((response) => {
+        const repos = response.data.user.repositories.edges;
+        const pageInfo = response.data.user.repositories.pageInfo;
+        commit("setMoreRepos", { repos, pageInfo, user: payload.userLogin });
+        commit("setIsLoadingMoreRepos", false);
+        localStorage.setItem(state.searchInput, JSON.stringify({ users: state.users, pagination: state.pagination }));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
   fetchUsers({ commit }, payload) {
     commit("setEmptyResults", false);
     commit("setIsLoading", true);
@@ -81,6 +114,7 @@ const actions = {
     const localResults = JSON.parse(localStorage.getItem(state.searchInput));
 
     if (localResults && !payload?.append && !payload?.refetch) {
+      commit("setIsLoading", true);
       commit('setIsResultsFromLS', true);
       commit("setUsers", localResults.users);
       commit("setPagination", localResults.pagination);
@@ -101,7 +135,7 @@ const actions = {
       .then((response) => {
         const res = response.data.search;
 
-        const filteredUsers = res.edges.filter(user => Object.keys(user.node).length);
+        const filteredUsers = res.edges.filter(user => Object.keys(user.node).length).map(item => item.node);
 
         if (payload?.append) {
           commit("appendUsers", filteredUsers);

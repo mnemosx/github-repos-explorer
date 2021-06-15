@@ -1,32 +1,55 @@
 <template>
   <div class="container">
     <div
-      v-for="item in results"
-      :key="item.node.name + '_' + item.node.login"
+      v-for="user in results"
+      :key="user.name + '_' + user.login"
       class="user-card"
     >
       <div class="card-title">
-        <h2>{{ item.node.name || item.node.login || "" }}</h2>
+        <h2>{{ user.name || user.login || "" }}</h2>
       </div>
       <div class="inner-card">
         <img
-          :src="item.node.avatarUrl"
-          :alt="item.node.name || item.node.login"
+          :src="user.avatarUrl"
+          :alt="user.name || user.login"
           class="user-avatar"
         />
         <vue-horizontal class="horizontal">
-          <template
-            v-for="(repo, idx) in item.node.repositories.edges"
-            :key="idx"
-          >
+          <template v-for="(repo, idx) in user.repositories.edges" :key="idx">
             <Repo :repo="repo.node" />
           </template>
+          <div
+            v-show="user.repositories.pageInfo.hasNextPage"
+            class="horizontal__more"
+            tabindex="0"
+            @click="
+              loadMoreRepos(user.login, user.repositories.pageInfo.endCursor)
+            "
+            @keydown.enter="
+              loadMoreRepos(user.login, user.repositories.pageInfo.endCursor)
+            "
+          >
+            <font-awesome-icon
+              v-if="store.state.isLoadingMoreRepos"
+              icon="sync-alt"
+              size="lg"
+              spin
+            />
+            <div v-else>
+              <font-awesome-icon
+                icon="times"
+                :transform="{ rotate: 45 }"
+                size="lg"
+              />
+              <span>load more</span>
+            </div>
+          </div>
         </vue-horizontal>
       </div>
     </div>
     <Button
       v-if="store.state.pagination.hasNextPage"
-      @clicked="loadMore"
+      @clicked="loadMoreUsers"
       text="Load more"
       :hasArrow="false"
       class="more-btn"
@@ -70,8 +93,12 @@ export default {
       localStorage.setItem("likes", JSON.stringify(store.state.likes));
     });
 
-    const loadMore = () => {
+    const loadMoreUsers = () => {
       store.dispatch("fetchUsers", { append: true });
+    };
+
+    const loadMoreRepos = (userLogin, endCursor) => {
+      store.dispatch("fetchMoreRepos", { userLogin, endCursor });
     };
 
     emitter.on("onTabKey", () => {
@@ -84,7 +111,8 @@ export default {
 
     return {
       results,
-      loadMore,
+      loadMoreUsers,
+      loadMoreRepos,
       store,
       showKeyNavInfo,
     };
@@ -156,9 +184,28 @@ export default {
       .horizontal {
         justify-content: space-between;
         width: calc(100% - 170px);
-
         @include sm {
           width: 100vw;
+        }
+        &__more {
+          background: $color-white;
+          @include center-flex-vh;
+          border-radius: $border-radius-small;
+          min-width: 150px;
+          @include transition;
+          &:hover,
+          &:focus {
+            outline: none;
+            cursor: pointer;
+            box-shadow: inset 0px -4px 0px 0px $color-accent;
+          }
+          & > div {
+            @include center-flex-vh;
+            @include col;
+            svg {
+              margin-bottom: 10px;
+            }
+          }
         }
       }
     }

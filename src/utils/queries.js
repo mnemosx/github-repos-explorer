@@ -9,6 +9,7 @@ export const UsersWithRepos = `
       edges {
         node {
           ... on User {
+            id
             avatarUrl
             name
             login
@@ -23,6 +24,10 @@ export const UsersWithRepos = `
                   url
                 }
               }
+              pageInfo {
+                endCursor
+                hasNextPage
+              }
             }
           }
         }
@@ -30,8 +35,32 @@ export const UsersWithRepos = `
       pageInfo {
         endCursor
         hasNextPage
-        hasPreviousPage
       }
+    }
+  }
+`;
+export const MoreRepos = `
+  query GetRepos(
+    $user: String!
+    $number_of_repos: Int
+    $cursor: String
+  ) {
+    user(login: $user) {
+      repositories(first: $number_of_repos, after: $cursor, orderBy: {field: STARGAZERS, direction: DESC}) {
+        edges {
+          node {
+            id
+            name
+            stargazerCount
+            isFork
+            url
+          }
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      } 
     }
   }
 `;
