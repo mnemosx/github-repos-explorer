@@ -97,7 +97,7 @@ export default {
 
   &__input {
     width: 100%;
-    padding: 5px 10px;
+    padding: 5px 40px 5px 10px;
     font-family: $sans-serif-font;
     font-size: 1.4em;
     line-height: 2;

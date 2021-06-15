@@ -3,7 +3,7 @@
     class="repo"
     tabindex="0"
     @keydown.enter="openLink"
-    @keydown.space="toggleLike"
+    @keydown.space.prevent="toggleLike"
     @keydown.tab.once="emitter.emit('onTabKey')"
   >
     <div class="repo-header">
