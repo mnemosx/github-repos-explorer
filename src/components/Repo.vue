@@ -12,6 +12,7 @@
         size="lg"
         :color="isLiked ? styles.redDarkColor : styles.mainColor"
         :class="[{ 'repo-heart__liked': isLiked }, 'repo-heart']"
+        tabindex="-1"
         @click="toggleLike"
       />
       <h3>{{ repo.name }}</h3>
@@ -119,6 +120,7 @@ export default {
 
     @media (hover: hover) {
       .repo-heart {
+        outline: none;
         @include transition;
         &:hover {
           color: $color-red-dark;

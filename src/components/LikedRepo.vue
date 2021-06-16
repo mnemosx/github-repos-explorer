@@ -78,6 +78,9 @@ export default {
   @include transition;
   span:first-of-type {
     cursor: pointer;
+    svg {
+      @include icon-focus;
+    }
   }
   &:not(:first-of-type):hover {
     background: rgba($color-box-shadow-accent, 0.7);
@@ -87,6 +90,7 @@ export default {
     color: $color-main;
     text-decoration: none;
     word-wrap: break-word;
+    @include link-focus;
     @media (hover: hover) {
       &:hover {
         text-decoration: underline;

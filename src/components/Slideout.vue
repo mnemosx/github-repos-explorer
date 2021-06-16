@@ -139,8 +139,9 @@ export default {
       line-height: 1;
       svg {
         cursor: pointer;
-        @include transition(0.5s);
+        @include icon-focus;
         &:hover {
+          @include transition(0.5s);
           color: $color-red-dark;
           transform: rotate(-180deg);
         }

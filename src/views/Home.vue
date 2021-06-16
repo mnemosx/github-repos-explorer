@@ -178,9 +178,10 @@ export default {
       &-btn {
         margin-right: 20px;
         cursor: pointer;
+        @include icon-focus;
         &__refetch {
-          @include transition(0.2s);
           &:hover {
+            @include transition(0.2s);
             transform: rotate(180deg);
           }
         }
