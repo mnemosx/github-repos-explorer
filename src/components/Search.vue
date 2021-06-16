@@ -33,6 +33,7 @@ export default {
      * If input comes from URL, fetch users immediately, no need to wait
      */
     const timeout = ref(null);
+    let hasTimeout = false;
 
     const input = reactive({
       // TODO: Needs cleanup
@@ -41,10 +42,15 @@ export default {
           return store.state.searchInput;
         },
         set(val) {
-          if (timeout.value) clearTimeout(timeout.value);
-          timeout.value = setTimeout(() => {
-            store.commit("setSearchInput", val);
-          }, 1000);
+          if (hasTimeout) {
+            if (timeout.value) clearTimeout(timeout.value);
+            timeout.value = setTimeout(() => {
+              store.commit("setSearchInput", val);
+            }, 1000);
+            return;
+          }
+          store.commit("setSearchInput", val);
+          hasTimeout = true;
         },
       }),
     });
@@ -76,7 +82,6 @@ export default {
       () => input.searchInput,
       (val) => {
         if (val !== "") {
-          store.commit("setSearchInput", val);
           store.dispatch("fetchUsers");
         }
       }
