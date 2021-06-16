@@ -11,7 +11,7 @@ const state = {
   reposPerUser: 10,
   emptyResults: false,
   isLoading: false,
-  isLoadingMoreRepos: false,
+  isLoadingMoreRepos: { userLogin: null, state: false },
   isResultsFromLS: false,
   pagination: { hasNextPage: false, endCursor: null },
   searchInput: '',
@@ -80,7 +80,7 @@ const mutations = {
 
 const actions = {
   fetchMoreRepos({ commit }, payload) {
-    commit("setIsLoadingMoreRepos", true);
+    commit("setIsLoadingMoreRepos", { userLogin: payload.userLogin, state: true });
     client
       .executeQuery({
         query: MoreRepos,
@@ -94,7 +94,7 @@ const actions = {
         const repos = response.data.user.repositories.edges;
         const pageInfo = response.data.user.repositories.pageInfo;
         commit("setMoreRepos", { repos, pageInfo, user: payload.userLogin });
-        commit("setIsLoadingMoreRepos", false);
+        commit("setIsLoadingMoreRepos", { userLogin: payload.userLogin, state: false });
         localStorage.setItem(state.searchInput, JSON.stringify({ users: state.users, pagination: state.pagination }));
       })
       .catch((error) => {

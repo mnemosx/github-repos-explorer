@@ -15,7 +15,7 @@
           class="user-avatar"
         />
         <vue-horizontal class="horizontal">
-          <template v-for="(repo, idx) in user.repositories.edges" :key="idx">
+          <template v-for="repo in user.repositories.edges" :key="repo.node.id">
             <Repo :repo="repo.node" />
           </template>
           <div
@@ -30,7 +30,10 @@
             "
           >
             <font-awesome-icon
-              v-if="store.state.isLoadingMoreRepos"
+              v-if="
+                store.state.isLoadingMoreRepos.state &&
+                user.login === store.state.isLoadingMoreRepos.userLogin
+              "
               icon="sync-alt"
               size="lg"
               spin
